@@ -1,0 +1,18 @@
+2025-09-10 15:52:20 [ERROR]: Error: Validation failed
+ValidationError: Validation failed
+    at C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\src\middlewares\validation.ts:23:19
+    at Layer.handle [as handle_request] (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\node_modules\express\lib\router\index.js:47:12)
+2025-09-10 16:24:56 [ERROR]: Error connecting to MongoDB: getaddrinfo ENOTFOUND mongodb
+MongooseServerSelectionError: getaddrinfo ENOTFOUND mongodb
+    at _handleConnectionErrors (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\node_modules\mongoose\lib\connection.js:1165:11)
+    at NativeConnection.openUri (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\node_modules\mongoose\lib\connection.js:1096:11)
+    at async connectDatabase (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\src\config\database.ts:10:18)
+    at async seed (C:\MY FILES\Dev\IEEE\challenges\wattUP\backend\scripts\seedOrganizations.ts:6:5)

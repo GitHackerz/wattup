@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: wattup-mongodb-dev
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: wattup
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_dev:/data/db
+    networks:
+      - wattup-network-dev
+
+  # Redis Cache
+  redis:
+    image: redis:7.0-alpine
+    container_name: wattup-redis-dev
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass redispassword123
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data_dev:/data
+    networks:
+      - wattup-network-dev
+
+  # Backend Service (Development)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wattup-backend-dev
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: development
+      PORT: 5000
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/wattup?authSource=admin
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: redispassword123
+      JWT_SECRET: your-super-secret-jwt-key-development
+      JWT_EXPIRES_IN: 7d
+      JWT_REFRESH_SECRET: your-refresh-secret-development
+      JWT_REFRESH_EXPIRES_IN: 30d
+      CORS_ORIGIN: http://localhost:3000
+      FRONTEND_URL: http://localhost:3000
+      MAX_FILE_SIZE: 10485760
+      UPLOAD_DESTINATION: ./uploads
+      RATE_LIMIT_WINDOW: 900000
+      RATE_LIMIT_MAX: 100
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - backend_uploads_dev:/app/uploads
+      - backend_logs_dev:/app/logs
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - wattup-network-dev
+
+  # Frontend Service (Development)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: wattup-frontend-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:5000/api
+      REACT_APP_SOCKET_URL: http://localhost:5000
+      CHOKIDAR_USEPOLLING: true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - wattup-network-dev
+    stdin_open: true
+    tty: true
+
+volumes:
+  mongodb_data_dev:
+    driver: local
+  redis_data_dev:
+    driver: local
+  backend_uploads_dev:
+    driver: local
+  backend_logs_dev:
+    driver: local
+
+networks:
+  wattup-network-dev:
+    driver: bridge
